@@ -5,10 +5,11 @@ let engine: BrainEngine | null = null
 
 async function getEngine(): Promise<BrainEngine> {
   if (engine) return engine
-  const config = { engine: 'postgres' as const, database_url: process.env.DATABASE_URL }
-  engine = await createEngine(config)
-  await engine.connect(config)
-  await engine.initSchema()
+  const config = { engine: 'postgres' as const, database_url: process.env.DATABASE_URL, poolSize: 5 }
+  const e = await createEngine(config)
+  await e.connect(config)
+  await e.initSchema()
+  engine = e
   return engine
 }
 
