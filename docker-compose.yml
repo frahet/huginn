@@ -30,19 +30,7 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-
-  n8n:
-    image: n8nio/n8n:latest
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-    volumes:
-      - n8n_data:/home/node/.n8n
-    environment:
-      WEBHOOK_URL: ${N8N_WEBHOOK_URL}
-      # n8n v1+ uses a setup wizard on first run to create your admin account.
-      # Open http://your-machine:5678 and follow the prompts.
+      PUBLIC_URL: ${PUBLIC_URL}
 
 volumes:
   pgdata:
-  n8n_data:
