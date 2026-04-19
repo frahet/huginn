@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: muninn
+      POSTGRES_USER: muninn
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U muninn"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  muninn:
+    build: ./muninn
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://muninn:${POSTGRES_PASSWORD}@postgres:5432/muninn
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+
+  # huginn: (Phase 2 — not yet built)
+  #   build: ./huginn
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - muninn
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+  #     TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+  #     TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+
+  n8n:
+    image: n8nio/n8n:1.88.0
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    environment:
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+      # n8n v1+ uses a setup wizard on first run to create your admin account.
+      # Open http://your-machine:5678 and follow the prompts.
+
+volumes:
+  pgdata:
+  n8n_data:
