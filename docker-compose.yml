@@ -32,7 +32,7 @@ services:
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
 
   n8n:
-    image: n8nio/n8n:1.88.0
+    image: n8nio/n8n:latest
     restart: unless-stopped
     ports:
       - "5678:5678"
