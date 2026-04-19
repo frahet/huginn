@@ -314,11 +314,11 @@ Every Claude Code session reads your full brain automatically.
 
 ### Phase 2 — Huginn + n8n + Telegram (Week 1-2)
 *Goal: talk to your brain from your phone*
-- [ ] Huginn HTTP API (POST /message)
+- [x] Huginn HTTP API (POST /message)
 - [ ] n8n Telegram workflow
 - [ ] Free text + commands both work
 - [ ] /ask /learn /status /brief working
-- [ ] All four containers running via docker compose up
+- [ ] All three containers running via docker compose up
 
 ### Phase 3 — Scheduled Jobs (Week 2-3)
 *Goal: something useful happens while you sleep*

@@ -14,28 +14,22 @@ services:
       timeout: 5s
       retries: 5
 
-  gbrain:
-    build: ./gbrain
+  huginn:
+    build:
+      context: .
+      dockerfile: huginn/Dockerfile
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+    ports:
+      - "3000:3000"
     environment:
       DATABASE_URL: postgresql://gbrain:${POSTGRES_PASSWORD}@postgres:5432/gbrain
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-
-  # huginn: (Phase 2 — not yet built)
-  #   build: ./huginn
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - gbrain
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-  #     TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-  #     TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
 
   n8n:
     image: n8nio/n8n:1.88.0
