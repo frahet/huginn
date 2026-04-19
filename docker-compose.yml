@@ -5,23 +5,23 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: muninn
-      POSTGRES_USER: muninn
+      POSTGRES_DB: gbrain
+      POSTGRES_USER: gbrain
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U muninn"]
+      test: ["CMD-SHELL", "pg_isready -U gbrain"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  muninn:
-    build: ./muninn
+  gbrain:
+    build: ./gbrain
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://muninn:${POSTGRES_PASSWORD}@postgres:5432/muninn
+      DATABASE_URL: postgresql://gbrain:${POSTGRES_PASSWORD}@postgres:5432/gbrain
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
 
@@ -29,7 +29,7 @@ services:
   #   build: ./huginn
   #   restart: unless-stopped
   #   depends_on:
-  #     - muninn
+  #     - gbrain
   #   ports:
   #     - "3000:3000"
   #   environment:

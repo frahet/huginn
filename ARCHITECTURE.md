@@ -25,20 +25,20 @@ without having done anything.
 ### Muninn — Memory
 > *"What happened, what exists, what was decided"*
 
-**Muninn is a fork of [GBrain](https://github.com/garrytan/gbrain)** — Garry
-Tan's open source personal knowledge brain. PostgreSQL + pgvector + hybrid
-search. Forked, renamed, made ours.
+**Muninn uses [GBrain](https://github.com/garrytan/gbrain)** — Garry Tan's
+open source personal knowledge brain. PostgreSQL + pgvector + hybrid search.
+We run it directly — no fork, no maintenance overhead.
 
 We do not rebuild what someone smarter already built better. We stand on good
 shoulders and build higher.
 
 **CLI:**
 ```bash
-muninn query "what did we decide about Kafka?"
-muninn put projects/novo-orion < note.md
-muninn timeline-add projects/novo-orion 2026-04-18 "Decided X because Y"
-muninn serve   # MCP server for Claude Code
-muninn stats
+gbrain query "what did we decide about Kafka?"
+gbrain put projects/novo-orion < note.md
+gbrain timeline-add projects/novo-orion 2026-04-18 "Decided X because Y"
+gbrain serve   # MCP server for Claude Code
+gbrain stats
 ```
 
 **Knowledge model:**
@@ -163,13 +163,13 @@ Huginn: ✅ Added to roadmap with today's date.
 | Host | Linux machine (SSH) | Always-on |
 | Containers | Docker Compose | Orchestration |
 | Communication hub | n8n | Webhook routing, channel integrations |
-| Memory | Muninn (GBrain fork) | PostgreSQL + pgvector |
+| Memory | GBrain (garrytan/gbrain) | PostgreSQL + pgvector |
 | Agent | Huginn | Claude reasoning + cron jobs |
 | Database | PostgreSQL + pgvector | Storage |
 | AI reasoning | Claude API (Sonnet) | Intelligence |
 | AI embeddings | OpenAI text-embedding-3-large | Vector search |
 | Interface | Telegram Bot | Primary control |
-| MCP | `muninn serve` | Claude Code bridge |
+| MCP | `gbrain serve` | Claude Code bridge |
 
 ---
 
@@ -187,7 +187,7 @@ See [`docker-compose.yml`](docker-compose.yml) for the full service definitions.
 huginn/                      ← this repo
   docker-compose.yml
   .env.example
-  muninn/                    ← git submodule (your-username/muninn)
+  gbrain/                    ← git submodule (garrytan/gbrain)
   huginn/                    ← agent code (to be built)
     src/
       api/
@@ -204,7 +204,7 @@ huginn/                      ← this repo
         github-watch.ts
         weekly-report.ts
       lib/
-        muninn.ts            ← wrapper around muninn CLI
+        gbrain.ts            ← wrapper around gbrain CLI
         claude.ts            ← Claude API client
       scheduler.ts           ← cron runner
     Dockerfile
@@ -220,7 +220,7 @@ huginn/                      ← this repo
 
 ```typescript
 // Every job follows this loop
-const context = await muninn.query("novo orion current status")
+const context = await gbrain.query("novo orion current status")
 const data = await fetchBinanceStats()
 
 const summary = await claude(`
@@ -229,7 +229,7 @@ const summary = await claude(`
   Write a 3-line briefing. Specific, no fluff.
 `)
 
-await muninn.timelineAdd("projects/novo-orion", today, summary)
+await gbrain.timelineAdd("projects/novo-orion", today, summary)
 await telegram.send(summary)
 ```
 
@@ -290,9 +290,9 @@ Adding WhatsApp or email later = add one new trigger node in n8n. No new code in
 // ~/.claude/mcp.json
 {
   "mcpServers": {
-    "muninn": {
+    "gbrain": {
       "command": "ssh",
-      "args": ["your-linux-machine", "muninn serve"]
+      "args": ["your-linux-machine", "gbrain serve"]
     }
   }
 }
@@ -302,29 +302,12 @@ Every Claude Code session reads your full brain automatically.
 
 ---
 
-## Muninn Fork Plan
-
-1. Fork `github.com/garrytan/gbrain` → `github.com/your-username/muninn`
-2. Rename CLI: `gbrain` → `muninn`
-3. Rename config: `~/.gbrain/` → `~/.muninn/`
-4. Update package.json (name, author, description)
-5. Write your own README
-6. Add as git submodule in huginn repo
-
-Keep upstream remote for pulling improvements:
-```bash
-git remote add upstream https://github.com/garrytan/gbrain
-git fetch upstream && git merge upstream/master  # when needed
-```
-
----
-
 ## Build Phases
 
-### Phase 1 — Muninn Running (Week 1)
+### Phase 1 — GBrain Running (Week 1)
 *Goal: Claude Code sessions never lose context again*
-- [x] Fork GBrain → your-username/muninn, rename CLI
-- [x] Docker Compose with postgres + muninn
+- [x] Add GBrain as git submodule (garrytan/gbrain)
+- [x] Docker Compose with postgres + gbrain
 - [ ] Seed with project context
 - [ ] MCP connected to Claude Code
 - [ ] Verify Claude reads Muninn on session start
@@ -355,7 +338,7 @@ git fetch upstream && git merge upstream/master  # when needed
 
 ## Design Principles
 
-1. **Don't rebuild what exists.** GBrain is Muninn. n8n handles channels. Stand on good shoulders.
+1. **Don't rebuild what exists.** GBrain handles memory. n8n handles channels. Stand on good shoulders.
 2. **n8n is the postman, Huginn is the brain.** Clean separation.
 3. **Memory first.** Huginn is only as smart as Muninn is rich.
 4. **Low noise.** Only surface what matters.
@@ -366,11 +349,10 @@ git fetch upstream && git merge upstream/master  # when needed
 
 ## Key References
 
-- [GBrain (Muninn source)](https://github.com/garrytan/gbrain)
+- [GBrain](https://github.com/garrytan/gbrain)
 - [gstack (Claude Code workflow)](https://github.com/garrytan/gstack)
 - [n8n](https://n8n.io)
 - [Huginn repo](https://github.com/frahet/huginn)
-- [Muninn repo](https://github.com/frahet/muninn)
 
 ---
 
