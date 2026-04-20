@@ -3,7 +3,7 @@ import type { BrainEngine, SearchResult, PageType } from 'gbrain/types'
 
 let engine: BrainEngine | null = null
 
-async function getEngine(): Promise<BrainEngine> {
+export async function getEngine(): Promise<BrainEngine> {
   if (engine) return engine
   const config = { engine: 'postgres' as const, database_url: process.env.DATABASE_URL, poolSize: 5 }
   const e = await createEngine(config)

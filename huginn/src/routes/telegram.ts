@@ -3,6 +3,7 @@ import { reply } from '../lib/claude.ts'
 import { sendMessage } from '../lib/telegram.ts'
 import { handleSave } from '../commands/save.ts'
 import { handleBrief } from '../commands/brief.ts'
+import { handleForget } from '../commands/forget.ts'
 
 interface TelegramUpdate {
   update_id: number
@@ -19,6 +20,12 @@ export async function handleTelegramUpdate(update: TelegramUpdate): Promise<void
 
   if (text.startsWith('/save ')) {
     const result = await handleSave(text.slice(6))
+    await sendMessage(chatId, result)
+    return
+  }
+
+  if (text.startsWith('/forget ')) {
+    const result = await handleForget(text.slice(8))
     await sendMessage(chatId, result)
     return
   }
