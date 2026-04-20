@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
-    "gbrain": "file:../gbrain"
+    "gbrain": "file:../gbrain",
+    "imap": "^0.8.19",
+    "mailparser": "^3.7.2"
   }
 }

@@ -2,6 +2,7 @@ import { search, formatContext } from '../lib/brain.ts'
 import { reply } from '../lib/claude.ts'
 import { sendMessage } from '../lib/telegram.ts'
 import { handleSave } from '../commands/save.ts'
+import { handleBrief } from '../commands/brief.ts'
 
 interface TelegramUpdate {
   update_id: number
@@ -18,6 +19,13 @@ export async function handleTelegramUpdate(update: TelegramUpdate): Promise<void
 
   if (text.startsWith('/save ')) {
     const result = await handleSave(text.slice(6))
+    await sendMessage(chatId, result)
+    return
+  }
+
+  if (text === '/brief') {
+    await sendMessage(chatId, 'Checking email and memory...')
+    const result = await handleBrief()
     await sendMessage(chatId, result)
     return
   }
