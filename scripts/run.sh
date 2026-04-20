@@ -22,4 +22,9 @@ M920="deus@10.0.0.117"
 # ssh "$M920" "cd ~/huginn && git pull && docker compose up -d --build huginn"
 
 # Remove orphan n8n container
-ssh "$M920" "cd ~/huginn && docker compose down --remove-orphans && docker compose up -d"
+# ssh "$M920" "cd ~/huginn && docker compose down --remove-orphans && docker compose up -d"
+
+# ── 2026-04-19 Cloudflare IP access rules for Telegram ───────────────────────
+
+# Add CF_AUTH_TOKEN to .env on M920
+# ssh "$M920" "echo 'CF_AUTH_TOKEN=your-token-here' >> ~/huginn/.env"
