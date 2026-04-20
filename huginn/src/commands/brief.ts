@@ -4,7 +4,7 @@ import { search, formatContext } from '../lib/brain.ts'
 
 export async function handleBrief(): Promise<string> {
   const [emails, brainResults] = await Promise.all([
-    fetchUnread(10).catch(() => []),
+    fetchUnread(20).catch(() => []),
     search('current priorities projects status', 5),
   ])
 
